@@ -18,20 +18,29 @@ public class Battle {
     }
 
     public boolean battle(){
+
         int roundNumber = 1;
+        int wonRounds = 0;
         appendRoundLog("**Battle starts between " + player.getName() + " VS " + opponent.getName() +"**\n");
         while(player.isAlive() && opponent.isAlive()){
             Round round = new Round(roundNumber);
-            round.playRound(player, opponent);
+            String outcome = round.playRound(player, opponent);
             appendRoundLog(round.getRoundLog());
             roundNumber++;
+            if(outcome.equals(Round.PLAYER_WIN)){
+                wonRounds++;
+            }
         }
         if(player.isAlive()){
             appendRoundLog("**" + player.getName() + " wins the battle against " + opponent.getName()+ "**\n");
+            int score = opponent.getStrength() + wonRounds;
+            player.setScore(player.getScore() + score);
+            player.setLife(player.getMaxLife());
         }else {
             appendRoundLog("**" + player.getName() + " lost the battle against " + opponent.getName() +" RIP**\n");
         }
-        return false;
+
+        return player.isAlive();
     }
 
     void appendRoundLog(String roundLog){
